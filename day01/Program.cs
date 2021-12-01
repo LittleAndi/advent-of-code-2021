@@ -3,23 +3,19 @@
     .Select(l => int.Parse(l))
     .ToArray<int>();
 
-int increase = 0;
-int previous = 10000;
-foreach (var item in lines)
+int increaseCount = 0;
+for (int i = 1; i < lines.Length; i++)
 {
-    if (item > previous) increase++;
-    previous = item;
+    if (lines[i - 1] < lines[i]) increaseCount++;
 }
 
-System.Console.WriteLine(increase);
+System.Console.WriteLine($"Part 1: {increaseCount}");
 
-increase = 0;
-previous = 10000;
-for (int i = 2; i < lines.Length; i++)
+increaseCount = 0;
+for (int i = 3; i < lines.Length; i++)
 {
-    var sum = lines[i - 2] + lines[i - 1] + lines[i];
-    if (sum > previous) increase++;
-    previous = sum;
+    // a + b + c < b + c + d => a < d
+    if (lines[i - 3] < lines[i]) increaseCount++;
 }
 
-System.Console.WriteLine(increase);
+System.Console.WriteLine($"Part 2: {increaseCount}");
