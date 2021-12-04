@@ -21,11 +21,11 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.xml"
+        run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.trx"
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
         with:
           name: XUNIT Tests # Name of the check run which will be created
-          path: tests/**/*.xml # Path to test results
+          path: tests/**/*.trx # Path to test results
           reporter: dotnet-trx # Format of test results
