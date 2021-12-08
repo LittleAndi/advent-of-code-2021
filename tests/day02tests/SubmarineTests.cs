@@ -3,10 +3,10 @@ using Xunit;
 
 namespace day02tests;
 
-public class UnitTest1
+public class SubmarineTests
 {
     [Fact]
-    public void Test1()
+    public void TestMovement()
     {
         var s = new Submarine();
         s.Forward(5);
@@ -19,7 +19,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public void Test2()
+    public void TestMovementWithAim()
     {
         var s = new Submarine();
         s.ForwardWithAim(5);

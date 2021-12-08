@@ -3,10 +3,10 @@ using Xunit;
 
 namespace day04tests;
 
-public class UnitTest1
+public class BingoGameTests
 {
     [Fact]
-    public void Test1()
+    public void TestSumOfUnmarkedNumbers()
     {
         var boardNumbers = new int[,]
         {
