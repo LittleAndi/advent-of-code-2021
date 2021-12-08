@@ -22,11 +22,30 @@ public class Display
 {
     string[] patterns;
     string[] output;
+    Dictionary<char, HashSet<char>> segments;
     public Display(string[] patterns, string[] output)
     {
         this.patterns = patterns;
         this.output = output;
+        this.segments = new Dictionary<char, HashSet<char>>
+        {
+            { 'a', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'b', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'c', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'd', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'e', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'f', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+            { 'g', new HashSet<char>{ 'a','b','c','d','e','f','g' } },
+        };
+        Reduce();
+
+
+    }
+    private void Reduce()
+    {
+
     }
 
-
+    public string Zero => $"{segments['a'].First()}{segments['b'].First()}{segments['c'].First()}{{segments['e'].First()}}{{segments['f'].First()}}{{segments['g'].First()}}" + segments['b'] + segments['c'] + segments['e'] + segments['f'] + segments['g'];
+    public string One => $"{segments['c'].First()}{segments['f'].First()}";
 }
