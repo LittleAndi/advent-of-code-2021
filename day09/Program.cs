@@ -4,21 +4,23 @@
     .ToArray();
 
 var map = new HeatMap(input);
+System.Console.WriteLine(map.SumOfRiskLevel);
+
 
 public class HeatMap
 {
-    char[,] map;
+    int[,] map;
     public HeatMap(char[][] mapInput)
     {
         var sizeX = mapInput[0].Length;
         var sizeY = mapInput.Length;
-        map = new char[sizeX, sizeY];
+        map = new int[sizeX, sizeY];
 
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
             {
-                map[x, y] = mapInput[y][x];
+                map[x, y] = Convert.ToInt32(mapInput[y][x].ToString());
             }
         }
 
@@ -27,11 +29,16 @@ public class HeatMap
     {
         get
         {
-            var p = LowPoints();
-            return p.Sum(p => p + 1);
+            var lowPoints = LowPoints();
+            return lowPoints.Sum(p => map[p.X, p.Y] + 1);
         }
     }
-    IEnumerable<int> LowPoints()
+    public struct Point
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+    IEnumerable<Point> LowPoints()
     {
         var sizeX = map.GetLength(0);
         var sizeY = map.GetLength(1);
@@ -52,7 +59,7 @@ public class HeatMap
 
                 if (value < to && value < le && value < ri && value < lo)
                 {
-                    yield return value;
+                    yield return new Point { X = x, Y = y };
                 }
             }
         }
