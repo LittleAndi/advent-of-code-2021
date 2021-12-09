@@ -63,16 +63,12 @@ public class HeatMap
         {
             for (int x = 0; x < sizeX; x++)
             {
-                var value = map[x, y];
-                //List<int> surroundingPoints = new List<int>();
-                //int tl = (y == 0 || x == 0) ? 0 : map[x - 1, y - 1];
-                int to = (y == 0) ? 10 : map[x, y - 1];
-                //int tr = (y == 0 || x == map.GetLength(0) ? 0 : map[x + 1, y]);
-                int le = (x == 0) ? 10 : map[x - 1, y];
-                int ri = (x == sizeX - 1) ? 10 : map[x + 1, y];
-                //int ll = (y == map.GetLength(1) || x == 0) ? 0 : map[x - 1, y + 1];
-                int lo = (y == sizeY - 1) ? 10 : map[x, y + 1];
-                //int lr = (x == map.GetLength(0) || y == map.GetLength(1)) ? 0 : map[x + 1, y + 1];
+                var point = new Point { X = x, Y = y };
+                var value = map[point.X, point.Y];
+                int to = (!OnMap(point.Up)) ? 10 : map[point.Up.X, point.Up.Y];
+                int le = (!OnMap(point.Left)) ? 10 : map[point.Left.X, point.Left.Y];
+                int ri = (!OnMap(point.Right)) ? 10 : map[point.Right.X, point.Right.Y];
+                int lo = (!OnMap(point.Down)) ? 10 : map[point.Down.X, point.Down.Y];
 
                 if (value < to && value < le && value < ri && value < lo)
                 {
