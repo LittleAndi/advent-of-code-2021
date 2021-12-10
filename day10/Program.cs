@@ -1,5 +1,8 @@
-﻿var chunks = File.ReadAllLines("input_test.txt")
-    .Select(l => !string.IsNullOrWhiteSpace(l));
+﻿var chunks = File.ReadAllLines("input.txt")
+    .Where(l => !string.IsNullOrWhiteSpace(l));
+
+var nav = new NavigationSystem(chunks);
+System.Console.WriteLine(nav.TotalSyntaxErrorScore);
 
 public class NavigationSystem
 {
@@ -34,28 +37,16 @@ public class NavigationSystem
     }
     char? FirstIllegalCharacter(string chunk)
     {
-        Dictionary<char, int> closed = new Dictionary<char, int>()
-        {
-            {')', 0 },
-            {']', 0 },
-            {'}', 0 },
-            {'>', 0 },
-        };
+        var stack = new Stack<char>();
         foreach (var c in chunk.ToCharArray())
         {
-            if (!closed.ContainsKey(c))
-            {
-                if (c == '(') closed[')']++;
-                if (c == '[') closed[']']++;
-                if (c == '{') closed['}']++;
-                if (c == '<') closed['>']++;
-            }
-            else
-            {
-                if (closed.Where(v => v.Key != c && v.Value > 0).Any()) return c;
-                if (--closed[c] < 0) return c;
-                closed[c]--;
-            }
+            if (c == '(') { stack.Push(')'); continue; }
+            if (c == '[') { stack.Push(']'); continue; }
+            if (c == '{') { stack.Push('}'); continue; }
+            if (c == '<') { stack.Push('>'); continue; }
+
+            var popped = stack.Pop();
+            if (popped != c) return c;
         }
         return null;
     }

@@ -6,10 +6,10 @@ using Xunit;
 
 namespace day10tests;
 
-public class UnitTest1
+public class NavigationSystemTests
 {
     [Fact]
-    public void Test1()
+    public void TestTotalSyntaxErrorScore()
     {
         var chunks = File.ReadAllLines("input_test.txt")
             .Where(l => !string.IsNullOrWhiteSpace(l));
@@ -20,9 +20,9 @@ public class UnitTest1
     [InlineData("{([(<{}[<>[]}>{[]{[(<()>", 1197)]
     [InlineData("[[<[([]))<([[{}[[()]]]", 3)]
     [InlineData("[{[{({}]{}}([{[{{{}}([]", 57)]
-    [InlineData("{([(<{}[<>[]}>{[]{[(<()>", 3)]
+    [InlineData("[<(<(<(<{}))><([]([]()", 3)]
     [InlineData("<{([([[(<>()){}]>(<<{{", 25137)]
-    public void Test2(string chunk, int error)
+    public void TestSyntaxErrorScore(string chunk, int error)
     {
         var nav = new NavigationSystem(new List<string> { chunk });
         nav.TotalSyntaxErrorScore.ShouldBe(error);
