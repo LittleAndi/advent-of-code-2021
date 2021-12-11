@@ -31,7 +31,7 @@ public class CaveTests
     }
 
     [Fact]
-    public void TestName()
+    public void TestStepFlashCount()
     {
         // This one needs its own cave
         var input = File.ReadAllLines("input_test.txt")
