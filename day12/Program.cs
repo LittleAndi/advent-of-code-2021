@@ -1,2 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿var input = File.ReadAllLines("input.txt")
+    .Where(l => !string.IsNullOrWhiteSpace(l))
+    .Select(l => l.ToCharArray().Select(c => Convert.ToInt32(c.ToString())));
