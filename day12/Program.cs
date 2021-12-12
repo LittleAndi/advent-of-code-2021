@@ -4,7 +4,7 @@
 
 var caveSystem = new CaveSystem(input);
 
-System.Console.WriteLine($"{caveSystem.PossiblePaths}");
+System.Console.WriteLine($"{caveSystem.PossiblePathsWithMaxOneVisitToSmallCave}");
 
 internal class CaveSystem
 {
@@ -20,15 +20,23 @@ internal class CaveSystem
         }
     }
 
-    public int PossiblePaths
+    public int PossiblePathsWithMaxOneVisitToSmallCave
     {
         get
         {
-            return FindPaths("start", new HashSet<string> { "start" }, new List<string>());
+            return FindPaths("start", new List<string> { "start" }, new List<string>());
         }
     }
 
-    private int FindPaths(string cave, HashSet<string> visitedSmallCaves, List<string> breadCrumbs)
+    public int PossiblePathsWithMaxTwoVisitsToSmallCaves
+    {
+        get
+        {
+            return FindPaths("start", new List<string> { "start" }, new List<string>(), 2);
+        }
+    }
+
+    private int FindPaths(string cave, List<string> visitedSmallCaves, List<string> breadCrumbs, int maxVisitSmallCaves = 1)
     {
         var pathCount = 0;
 
@@ -40,19 +48,20 @@ internal class CaveSystem
             return ++pathCount;
         }
 
-        var pathsToVisit = paths.Where(p => p.Key.Equals(cave) && !visitedSmallCaves.Contains(p.Value)).ToList();
+        var pathsToVisit = paths.Where(p => p.Key.Equals(cave) && visitedSmallCaves.Count(c => c == p.Value) < maxVisitSmallCaves && p.Value != "start").ToList();
         foreach (var path in pathsToVisit)
         {
             // this starts a new path, copy visitedSmallCaves
-            var visitedSmallCavesForThisPath = new HashSet<string>(visitedSmallCaves);
+            var visitedSmallCavesForThisPath = new List<string>(visitedSmallCaves);
             var breadCrumbForThisPath = new List<string>(breadCrumbs);
 
             if (path.Value == path.Value.ToLower())
             {
                 // small cave
-                if (visitedSmallCavesForThisPath.Add(path.Value))
+                if (visitedSmallCavesForThisPath.Count(c => c == path.Value) < maxVisitSmallCaves)
                 {
                     // not visited before
+                    visitedSmallCavesForThisPath.Add(path.Value);
                     pathCount += FindPaths(path.Value, visitedSmallCavesForThisPath, breadCrumbForThisPath);
                 }
                 else
