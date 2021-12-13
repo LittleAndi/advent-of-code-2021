@@ -38,8 +38,8 @@ public class CaveSystemTests
 
     [Theory]
     [InlineData("input_test_1.txt", 36)]
-    // [InlineData("input_test_2.txt", 103)]
-    // [InlineData("input_test_3.txt", 3509)]
+    [InlineData("input_test_2.txt", 103)]
+    [InlineData("input_test_3.txt", 3509)]
     public void TestPossiblePathsWithMaxTwoVisitsToSmallCaves(string filename, int possiblePaths)
     {
         var input = File.ReadAllLines(filename)

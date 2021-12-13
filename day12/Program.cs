@@ -4,7 +4,8 @@
 
 var caveSystem = new CaveSystem(input);
 
-System.Console.WriteLine($"{caveSystem.PossiblePathsWithMaxOneVisitToSmallCave}");
+System.Console.WriteLine($"Part 1: {caveSystem.PossiblePathsWithMaxOneVisitToSmallCave} possible paths.");
+System.Console.WriteLine($"Part 2: {caveSystem.PossiblePathsWithMaxTwoVisitsToSmallCaves} possible paths.");
 
 internal class CaveSystem
 {
@@ -44,12 +45,14 @@ internal class CaveSystem
 
         if (cave == "end")
         {
-            System.Console.WriteLine(string.Join(',', breadCrumbs));
+            // System.Console.WriteLine(string.Join(',', breadCrumbs));
             return ++pathCount;
         }
 
+        // Check (for part 2) if one single small cave have been visited twice, then lower this limit
+        if (visitedSmallCaves.GroupBy(c => c).Select(group => group.Count()).Where(x => x >= 2).Any()) maxVisitSmallCaves = 1;
         var pathsToVisit = paths.Where(p => p.Key.Equals(cave) && visitedSmallCaves.Count(c => c == p.Value) < maxVisitSmallCaves && p.Value != "start").ToList();
-        foreach (var path in pathsToVisit)
+        foreach (var path in pathsToVisit.OrderBy(p => p.Value))
         {
             // this starts a new path, copy visitedSmallCaves
             var visitedSmallCavesForThisPath = new List<string>(visitedSmallCaves);
@@ -62,7 +65,7 @@ internal class CaveSystem
                 {
                     // not visited before
                     visitedSmallCavesForThisPath.Add(path.Value);
-                    pathCount += FindPaths(path.Value, visitedSmallCavesForThisPath, breadCrumbForThisPath);
+                    pathCount += FindPaths(path.Value, visitedSmallCavesForThisPath, breadCrumbForThisPath, maxVisitSmallCaves);
                 }
                 else
                 {
@@ -73,7 +76,7 @@ internal class CaveSystem
             else
             {
                 // BIG CAVE
-                pathCount += FindPaths(path.Value, visitedSmallCavesForThisPath, breadCrumbForThisPath);
+                pathCount += FindPaths(path.Value, visitedSmallCavesForThisPath, breadCrumbForThisPath, maxVisitSmallCaves);
             }
         }
         return pathCount;
