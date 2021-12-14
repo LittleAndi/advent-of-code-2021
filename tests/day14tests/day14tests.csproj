@@ -24,5 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\day14\day14.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="input_test.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
