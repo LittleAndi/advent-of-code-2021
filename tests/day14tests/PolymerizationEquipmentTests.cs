@@ -17,14 +17,20 @@ public class PolymerizationEquipmentTests
         var rules = new Dictionary<string, char>(lines.Skip(2).Select(l => new KeyValuePair<string, char>(l.Split(" -> ")[0], l.Split(" -> ")[1][0])));
 
         var p = new PolymerizationEquipment(start, rules);
+        p.MostCommonElementCount.ShouldBe(2);
+        p.LeastCommonElementCount.ShouldBe(1);
         p.ApplyRules();
-        p.Polymer.ShouldBe("NCNBCHB");
+        p.MostCommonElementCount.ShouldBe(2);
+        p.LeastCommonElementCount.ShouldBe(1);
         p.ApplyRules();
-        p.Polymer.ShouldBe("NBCCNBBBCBHCB");
+        p.MostCommonElementCount.ShouldBe(6);
+        p.LeastCommonElementCount.ShouldBe(1);
         p.ApplyRules();
-        p.Polymer.ShouldBe("NBBBCNCCNBBNBNBBCHBHHBCHB");
+        p.MostCommonElementCount.ShouldBe(11);
+        p.LeastCommonElementCount.ShouldBe(4);
         p.ApplyRules();
-        p.Polymer.ShouldBe("NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB");
+        p.MostCommonElementCount.ShouldBe(23);
+        p.LeastCommonElementCount.ShouldBe(5);
     }
 
     [Fact]

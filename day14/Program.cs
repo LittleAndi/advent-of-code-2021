@@ -10,58 +10,76 @@ for (int i = 0; i < 10; i++)
     p.ApplyRules();
 }
 
-System.Console.WriteLine(p.MostCommonElementCount - p.LeastCommonElementCount);
+System.Console.WriteLine($"Part 1: The difference between most common and least common element is {p.MostCommonElementCount - p.LeastCommonElementCount}");
 
 for (int i = 0; i < 30; i++)
 {
     p.ApplyRules();
-    System.Console.WriteLine($"{i}:\t{p.MostCommonElementCount - p.LeastCommonElementCount}");
 }
 
-System.Console.WriteLine(p.MostCommonElementCount - p.LeastCommonElementCount);
-
+System.Console.WriteLine($"Part 2: The difference between most common and least common element is {p.MostCommonElementCount - p.LeastCommonElementCount}");
 
 public class PolymerizationEquipment
 {
-    List<char> polymer;
+    List<char> polymerTemplate;
+    Dictionary<string, long> polymerPairs = new Dictionary<string, long>();
+    char endingChar;
     Dictionary<string, char> rules;
 
     public PolymerizationEquipment(List<char> polymerTemplate, Dictionary<string, char> pairInsertionRules)
     {
-        this.polymer = polymerTemplate;
+        for (int i = 0; i <= polymerTemplate.Count - 2; i++)
+        {
+            var pair = new string(new char[] { polymerTemplate[i], polymerTemplate[i + 1] });
+            if (!polymerPairs.TryAdd(pair, 1)) polymerPairs[pair]++;
+        }
+        endingChar = polymerTemplate.Last();
+
+        this.polymerTemplate = polymerTemplate;
         this.rules = pairInsertionRules;
     }
-    public string Polymer => string.Join("", this.polymer);
     public void ApplyRules()
     {
-        var newList = new List<char>();
-        for (int i = 0; i <= polymer.Count - 2; i++)
+        var newPolymerPairs = new Dictionary<string, long>();
+        foreach (var pair in polymerPairs)
         {
-            var pair = new string(new char[] { polymer[i], polymer[i + 1] });
-            newList.Add(polymer[i]);
-            newList.Add(rules[pair]);
+            var newPair = new string(new char[2] { pair.Key[0], rules[pair.Key] });
+            if (!newPolymerPairs.TryAdd(newPair, pair.Value)) newPolymerPairs[newPair] += pair.Value;
+            newPair = new string(new char[2] { rules[pair.Key], pair.Key[1] });
+            if (!newPolymerPairs.TryAdd(newPair, pair.Value)) newPolymerPairs[newPair] += pair.Value;
         }
-        newList.Add(polymer.Last());
 
-        this.polymer = newList;
+        this.polymerPairs = newPolymerPairs;
     }
-
+    public int PolymerPairs => this.polymerPairs.Count;
     public long MostCommonElementCount
     {
         get
         {
-            var t = this.polymer.Cast<char>().ToList(); //.GroupBy(p => p);
-            var g = t.GroupBy(c => c).Select(group => new KeyValuePair<char, long>(group.Key, group.Count()));
-            return g.OrderByDescending(c => c.Value).First().Value;
+            Dictionary<char, long> chars = new Dictionary<char, long>();
+
+            foreach (var pair in polymerPairs)
+            {
+                if (!chars.TryAdd(pair.Key[0], pair.Value)) chars[pair.Key[0]] += pair.Value;
+            }
+            var lastChar = polymerTemplate.Last();
+            if (!chars.TryAdd(lastChar, polymerPairs.Last().Value)) chars[lastChar]++;
+            return chars.OrderByDescending(c => c.Value).First().Value;
         }
     }
     public long LeastCommonElementCount
     {
         get
         {
-            var t = this.polymer.Cast<char>().ToList(); //.GroupBy(p => p);
-            var g = t.GroupBy(c => c).Select(group => new KeyValuePair<char, long>(group.Key, group.Count()));
-            return g.OrderBy(c => c.Value).First().Value;
+            Dictionary<char, long> chars = new Dictionary<char, long>();
+
+            foreach (var pair in polymerPairs)
+            {
+                if (!chars.TryAdd(pair.Key[0], pair.Value)) chars[pair.Key[0]] += pair.Value;
+            }
+            var lastChar = polymerTemplate.Last();
+            if (!chars.TryAdd(lastChar, polymerPairs.Last().Value)) chars[lastChar]++;
+            return chars.OrderBy(c => c.Value).First().Value;
         }
     }
 }
